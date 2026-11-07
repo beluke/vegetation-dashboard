@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_1e6f83c77ab8a2c8a8055ecadaa1369f {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+    
+                    <style>
+                        .foliumtooltip {
+                            
+                        }
+                       .foliumtooltip table{
+                            margin: auto;
+                        }
+                        .foliumtooltip tr{
+                            text-align: left;
+                        }
+                        .foliumtooltip th{
+                            padding: 2px; padding-right: 8px;
+                        }
+                    </style>
+            
+    
+                    <style>
+                        .foliumpopup {
+                            margin: auto;
+                        }
+                       .foliumpopup table{
+                            margin: auto;
+                        }
+                        .foliumpopup tr{
+                            text-align: left;
+                        }
+                        .foliumpopup th{
+                            padding: 2px; padding-right: 8px;
+                        }
+                    </style>
+            
+</head>
+<body>
+    
+    
+<div style="position:fixed; z-index:9999; background:rgba(255,255,255,0.92); border-radius:6px; box-shadow:0 1px 4px rgba(0,0,0,0.3); font-family:Arial, sans-serif; color:#222; top:10px; left:50%; transform:translateX(-50%);
+            padding:8px 16px; text-align:center; max-width:calc(100% - 140px);">
+  <div style="font-size:18px; font-weight:bold;">Conservation Area Vegetation Health</div>
+  <div style="font-size:13px;">Growing-season NDVI anomaly: May&ndash;Sep 2026 vs. 2016&ndash;2025 baseline</div>
+</div>
+    
+<div style="position:fixed; z-index:9999; background:rgba(255,255,255,0.92); border-radius:6px; box-shadow:0 1px 4px rgba(0,0,0,0.3); font-family:Arial, sans-serif; color:#222; bottom:30px; right:10px; padding:10px 12px; width:230px; font-size:12px;">
+  <div style="font-weight:bold; margin-bottom:6px;">NDVI anomaly (current &minus; baseline)</div>
+  <div style="height:14px; border:1px solid #999;
+              background:linear-gradient(to right, #8c510a, #d8b365, #f5f5f5, #5ab4ac, #01665e);"></div>
+  <div style="display:flex; justify-content:space-between; margin-top:2px;">
+    <span>&le; &minus;0.05</span><span>0</span><span>&ge; +0.05</span>
+  </div>
+  <div style="display:flex; justify-content:space-between; margin-top:4px; font-size:11px;">
+    <span style="color:#8c510a; font-weight:bold;">Browner than<br>normal</span>
+    <span style="text-align:center;">Near<br>normal</span>
+    <span style="color:#01665e; font-weight:bold; text-align:right;">Greener than<br>normal</span>
+  </div>
+  <div style="margin-top:8px; display:flex; align-items:center; gap:6px;">
+    <span style="display:inline-block; width:10px; height:10px; border-radius:50%;
+                 background:#333; border:1.5px solid white; box-shadow:0 0 0 1px #333;"></span>
+    Headquarters
+  </div>
+</div>
+    
+<div style="position:fixed; z-index:9999; background:rgba(255,255,255,0.92); border-radius:6px; box-shadow:0 1px 4px rgba(0,0,0,0.3); font-family:Arial, sans-serif; color:#222; bottom:30px; left:10px; padding:6px 10px; font-size:11px; max-width:300px;">
+  <b>Data sources</b><br>
+  NDVI: NASA MODIS Terra MOD13Q1 v061 (250 m, 16-day), processed in Google Earth Engine<br>
+  Boundaries &amp; HQ locations: course-provided sample data
+</div>
+    
+            <div class="folium-map" id="map_1e6f83c77ab8a2c8a8055ecadaa1369f" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_1e6f83c77ab8a2c8a8055ecadaa1369f = L.map(
+                "map_1e6f83c77ab8a2c8a8055ecadaa1369f",
+                {
+                    center: [0.0, 0.0],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 1,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_085f715318aabcc942d44d35bc69819a = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_085f715318aabcc942d44d35bc69819a.addTo(map_1e6f83c77ab8a2c8a8055ecadaa1369f);
+        
+    
+            var tile_layer_98c1174840ad430aa547e3f0b9b97962 = L.tileLayer(
+                "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "Imagery: Esri, Maxar, Earthstar Geographics",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_98c1174840ad430aa547e3f0b9b97962.addTo(map_1e6f83c77ab8a2c8a8055ecadaa1369f);
+        
+    
+        function geo_json_d6c21e235dc443584e963268aa931b7e_styler(feature) {
+            switch(feature.id) {
+                case "0": 
+                    return {"color": "#222222", "fillColor": "#44a199ff", "fillOpacity": 0.7, "weight": 2};
+                case "1": 
+                    return {"color": "#222222", "fillColor": "#abd6d2ff", "fillOpacity": 0.7, "weight": 2};
+                case "2": 
+                    return {"color": "#222222", "fillColor": "#f4f3f0ff", "fillOpacity": 0.7, "weight": 2};
+                default:
+                    return {"color": "#222222", "fillColor": "#85c6c1ff", "fillOpacity": 0.7, "weight": 2};
+            }
+        }
+        function geo_json_d6c21e235dc443584e963268aa931b7e_highlighter(feature) {
+            switch(feature.id) {
+                default:
+                    return {"fillOpacity": 0.85, "weight": 4};
+            }
+        }
+
+        function geo_json_d6c21e235dc443584e963268aa931b7e_onEachFeature(feature, layer) {
+
+            layer.on({
+                mouseout: function(e) {
+                    if(typeof e.target.setStyle === "function"){
+                            geo_json_d6c21e235dc443584e963268aa931b7e.resetStyle(e.target);
+                    }
+                },
+                mouseover: function(e) {
+                    if(typeof e.target.setStyle === "function"){
+                        const highlightStyle = geo_json_d6c21e235dc443584e963268aa931b7e_highlighter(e.target.feature)
+                        e.target.setStyle(highlightStyle);
+                    }
+                },
+            });
+        };
+        var geo_json_d6c21e235dc443584e963268aa931b7e = L.geoJson(null, {
+                onEachFeature: geo_json_d6c21e235dc443584e963268aa931b7e_onEachFeature,
+            
+                style: geo_json_d6c21e235dc443584e963268aa931b7e_styler,
+            ...{
+}
+        });
+
+        function geo_json_d6c21e235dc443584e963268aa931b7e_add (data) {
+            geo_json_d6c21e235dc443584e963268aa931b7e
+                .addData(data);
+        }
+            geo_json_d6c21e235dc443584e963268aa931b7e_add({"bbox": [-122.78, 37.72, -122.25, 38.08], "features": [{"bbox": [-122.6, 37.95, -122.45, 38.08], "geometry": {"coordinates": [[[-122.6, 37.95], [-122.45, 37.95], [-122.45, 38.08], [-122.6, 38.08], [-122.6, 37.95]]], "type": "Polygon"}, "id": "0", "properties": {"anomaly_label": "Above normal", "area_id": 1, "area_name": "North Preserve", "baseline": "2016-2025", "land_pixels": 3221, "ndvi_anomaly": 0.031, "ndvi_baseline": 0.509, "ndvi_current": 0.54, "season": "May-Sep 2026"}, "type": "Feature"}, {"bbox": [-122.42, 37.88, -122.25, 38.0], "geometry": {"coordinates": [[[-122.42, 37.88], [-122.25, 37.88], [-122.25, 38.0], [-122.42, 38.0], [-122.42, 37.88]]], "type": "Polygon"}, "id": "1", "properties": {"anomaly_label": "Near normal", "area_id": 2, "area_name": "East Wetlands", "baseline": "2016-2025", "land_pixels": 2989, "ndvi_anomaly": 0.012, "ndvi_baseline": 0.386, "ndvi_current": 0.398, "season": "May-Sep 2026"}, "type": "Feature"}, {"bbox": [-122.58, 37.72, -122.4, 37.86], "geometry": {"coordinates": [[[-122.58, 37.72], [-122.4, 37.72], [-122.4, 37.86], [-122.58, 37.86], [-122.58, 37.72]]], "type": "Polygon"}, "id": "2", "properties": {"anomaly_label": "Near normal", "area_id": 3, "area_name": "South Forest", "baseline": "2016-2025", "land_pixels": 2456, "ndvi_anomaly": -0.001, "ndvi_baseline": 0.359, "ndvi_current": 0.358, "season": "May-Sep 2026"}, "type": "Feature"}, {"bbox": [-122.78, 37.8, -122.62, 37.96], "geometry": {"coordinates": [[[-122.78, 37.8], [-122.62, 37.8], [-122.62, 37.96], [-122.78, 37.96], [-122.78, 37.8]]], "type": "Polygon"}, "id": "3", "properties": {"anomaly_label": "Near normal", "area_id": 4, "area_name": "West Hills", "baseline": "2016-2025", "land_pixels": 1600, "ndvi_anomaly": 0.018, "ndvi_baseline": 0.731, "ndvi_current": 0.749, "season": "May-Sep 2026"}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+    geo_json_d6c21e235dc443584e963268aa931b7e.bindTooltip(
+    function(layer){
+    let div = L.DomUtil.create('div');
+    
+    let handleObject = feature => {
+        if (feature === null) {
+            return '';
+        } else if (typeof(feature)=='object') {
+            return JSON.stringify(feature);
+        } else {
+            return feature;
+        }
+    }
+    let fields = ["area_name", "anomaly_label", "ndvi_anomaly"];
+    let aliases = ["Area:", "Condition:", "Anomaly:"];
+    let table = '<table>' +
+        String(
+        fields.map(
+        (v,i)=>
+        `<tr>
+            <th>${aliases[i]}</th>
+            
+            <td>${handleObject(layer.feature.properties[v])}</td>
+        </tr>`).join(''))
+    +'</table>';
+    div.innerHTML=table;
+    
+    return div
+    }
+    ,{
+  "sticky": true,
+  "className": "foliumtooltip",
+});
+                     
+    
+    geo_json_d6c21e235dc443584e963268aa931b7e.bindPopup(
+    function(layer){
+    let div = L.DomUtil.create('div');
+    
+    let handleObject = feature => {
+        if (feature === null) {
+            return '';
+        } else if (typeof(feature)=='object') {
+            return JSON.stringify(feature);
+        } else {
+            return feature;
+        }
+    }
+    let fields = ["area_name", "ndvi_current", "ndvi_baseline", "ndvi_anomaly", "anomaly_label", "land_pixels", "season", "baseline"];
+    let aliases = ["Area", "Current NDVI", "Baseline NDVI", "Anomaly", "Condition", "Land pixels (250 m)", "Season", "Baseline period"];
+    let table = '<table>' +
+        String(
+        fields.map(
+        (v,i)=>
+        `<tr>
+            <th>${aliases[i].toLocaleString()}</th>
+            
+            <td>${handleObject(layer.feature.properties[v]).toLocaleString()}</td>
+        </tr>`).join(''))
+    +'</table>';
+    div.innerHTML=table;
+    
+    return div
+    }
+    ,{
+  "className": "foliumpopup",
+});
+                     
+    
+            geo_json_d6c21e235dc443584e963268aa931b7e.addTo(map_1e6f83c77ab8a2c8a8055ecadaa1369f);
+        
+    
+            var feature_group_4ad21966fff69f8cbdfbec6f820982c8 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_21f8b1a737b7db0be9d36c645867b04b = L.circleMarker(
+                [38.015, -122.525],
+                {"bubblingMouseEvents": true, "color": "white", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#333333", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1.5}
+            ).addTo(feature_group_4ad21966fff69f8cbdfbec6f820982c8);
+        
+    
+        var popup_a83bb0f5ade94b73e7170152410cdb0a = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_ac6104d2ddffa46cddac70397aa7c452 = $(`<div id="html_ac6104d2ddffa46cddac70397aa7c452" style="width: 100.0%; height: 100.0%;"><b>North Preserve HQ</b><br>Area anomaly: +0.031<br>Condition: Above normal</div>`)[0];
+                popup_a83bb0f5ade94b73e7170152410cdb0a.setContent(html_ac6104d2ddffa46cddac70397aa7c452);
+            
+        
+
+        circle_marker_21f8b1a737b7db0be9d36c645867b04b.bindPopup(popup_a83bb0f5ade94b73e7170152410cdb0a)
+        ;
+
+        
+    
+    
+            circle_marker_21f8b1a737b7db0be9d36c645867b04b.bindTooltip(
+                `<div>
+                     North Preserve HQ
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_fd4445aa1ff5101e4e700e794dc764bb = L.circleMarker(
+                [37.94, -122.335],
+                {"bubblingMouseEvents": true, "color": "white", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#333333", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1.5}
+            ).addTo(feature_group_4ad21966fff69f8cbdfbec6f820982c8);
+        
+    
+        var popup_0d543d564ca6b3922c57dc648ddc5824 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_66ca777eec4b14ff7343e5f38686e819 = $(`<div id="html_66ca777eec4b14ff7343e5f38686e819" style="width: 100.0%; height: 100.0%;"><b>East Wetlands HQ</b><br>Area anomaly: +0.012<br>Condition: Near normal</div>`)[0];
+                popup_0d543d564ca6b3922c57dc648ddc5824.setContent(html_66ca777eec4b14ff7343e5f38686e819);
+            
+        
+
+        circle_marker_fd4445aa1ff5101e4e700e794dc764bb.bindPopup(popup_0d543d564ca6b3922c57dc648ddc5824)
+        ;
+
+        
+    
+    
+            circle_marker_fd4445aa1ff5101e4e700e794dc764bb.bindTooltip(
+                `<div>
+                     East Wetlands HQ
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_498d09c0e850be9420953c14b8b09c55 = L.circleMarker(
+                [37.79, -122.49],
+                {"bubblingMouseEvents": true, "color": "white", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#333333", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1.5}
+            ).addTo(feature_group_4ad21966fff69f8cbdfbec6f820982c8);
+        
+    
+        var popup_d1056341c4bddb8db578aca65f521ff0 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_b82da5f39bb22c11f5cdb3689abf26bd = $(`<div id="html_b82da5f39bb22c11f5cdb3689abf26bd" style="width: 100.0%; height: 100.0%;"><b>South Forest HQ</b><br>Area anomaly: -0.001<br>Condition: Near normal</div>`)[0];
+                popup_d1056341c4bddb8db578aca65f521ff0.setContent(html_b82da5f39bb22c11f5cdb3689abf26bd);
+            
+        
+
+        circle_marker_498d09c0e850be9420953c14b8b09c55.bindPopup(popup_d1056341c4bddb8db578aca65f521ff0)
+        ;
+
+        
+    
+    
+            circle_marker_498d09c0e850be9420953c14b8b09c55.bindTooltip(
+                `<div>
+                     South Forest HQ
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ba100443fc27b909ce48b7d9fea3b07a = L.circleMarker(
+                [37.88, -122.7],
+                {"bubblingMouseEvents": true, "color": "white", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#333333", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 1.5}
+            ).addTo(feature_group_4ad21966fff69f8cbdfbec6f820982c8);
+        
+    
+        var popup_03b6d27adae8e759c2ca738a192587ac = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_92a94c6f3a44d23d8818aa56f491b713 = $(`<div id="html_92a94c6f3a44d23d8818aa56f491b713" style="width: 100.0%; height: 100.0%;"><b>West Hills HQ</b><br>Area anomaly: +0.018<br>Condition: Near normal</div>`)[0];
+                popup_03b6d27adae8e759c2ca738a192587ac.setContent(html_92a94c6f3a44d23d8818aa56f491b713);
+            
+        
+
+        circle_marker_ba100443fc27b909ce48b7d9fea3b07a.bindPopup(popup_03b6d27adae8e759c2ca738a192587ac)
+        ;
+
+        
+    
+    
+            circle_marker_ba100443fc27b909ce48b7d9fea3b07a.bindTooltip(
+                `<div>
+                     West Hills HQ
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            feature_group_4ad21966fff69f8cbdfbec6f820982c8.addTo(map_1e6f83c77ab8a2c8a8055ecadaa1369f);
+        
+    
+            var layer_control_97927e653a54d83fd313cbe918a40c06_layers = {
+                base_layers : {
+                    "Light basemap (default)" : tile_layer_085f715318aabcc942d44d35bc69819a,
+                    "Satellite imagery" : tile_layer_98c1174840ad430aa547e3f0b9b97962,
+                },
+                overlays :  {
+                    "NDVI anomaly by conservation area" : geo_json_d6c21e235dc443584e963268aa931b7e,
+                    "Headquarters" : feature_group_4ad21966fff69f8cbdfbec6f820982c8,
+                },
+            };
+            let layer_control_97927e653a54d83fd313cbe918a40c06 = L.control.layers(
+                layer_control_97927e653a54d83fd313cbe918a40c06_layers.base_layers,
+                layer_control_97927e653a54d83fd313cbe918a40c06_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": true,
+  "autoZIndex": true,
+}
+            ).addTo(map_1e6f83c77ab8a2c8a8055ecadaa1369f);
+
+        
+    
+            map_1e6f83c77ab8a2c8a8055ecadaa1369f.fitBounds(
+                [[37.72, -122.78], [38.08, -122.25]],
+                {"padding": [20, 20]}
+            );
+        
+</script>
+</html>
